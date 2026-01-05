@@ -10,10 +10,6 @@
  * - Données COVID/SRAS
  * - Qualité de l'air
  */
-
-// Configuration pour webetu (proxy)
-// Décommenter si hébergé sur webetu
-/*
 $opts = array(
     'http' => array(
         'proxy' => 'tcp://www-cache:3128',
@@ -26,7 +22,7 @@ $opts = array(
 );
 $context = stream_context_create($opts);
 stream_context_set_default($opts);
-*/
+
 
 // Désactiver les erreurs pour la production
 error_reporting(E_ALL);
