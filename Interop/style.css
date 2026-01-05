@@ -1,0 +1,630 @@
+/* ==================== Variables CSS ==================== */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --light-bg: #ecf0f1;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --spacing: 20px;
+}
+
+/* ==================== Reset et base ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--primary-color);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* ==================== Container principal ==================== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+}
+
+/* ==================== Header ==================== */
+header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 3px solid var(--secondary-color);
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+header .subtitle {
+    font-size: 1.2em;
+    color: #7f8c8d;
+}
+
+.location-info {
+    background: var(--light-bg);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.location-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-item strong {
+    color: var(--secondary-color);
+}
+
+/* ==================== Sections ==================== */
+.section {
+    margin: 30px 0;
+    padding: 25px;
+    background: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.section h2 {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+/* ==================== Météo ==================== */
+.meteo-container {
+    padding: 20px;
+}
+
+.meteo-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.meteo-period {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.meteo-period h3 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.meteo-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.meteo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.meteo-item .icon {
+    font-size: 1.5em;
+}
+
+.meteo-item .value {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.meteo-alerts {
+    margin-top: 25px;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: var(--border-radius);
+}
+
+.meteo-alerts h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.weather-warnings {
+    list-style: none;
+    padding: 0;
+}
+
+.weather-warnings li {
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.weather-warnings .warning {
+    background: #fff3cd;
+    border-left: 4px solid var(--warning-color);
+}
+
+.weather-warnings .warning.cold {
+    background: #cfe2ff;
+    border-left-color: var(--secondary-color);
+}
+
+.weather-warnings .warning.rain {
+    background: #d1ecf1;
+    border-left-color: #0dcaf0;
+}
+
+.weather-warnings .warning.wind {
+    background: #e2e3e5;
+    border-left-color: #6c757d;
+}
+
+.weather-warnings .good {
+    background: #d1e7dd;
+    border-left: 4px solid var(--success-color);
+}
+
+/* ==================== Carte Leaflet ==================== */
+#map {
+    height: 500px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    margin: 20px 0;
+}
+
+.traffic-legend {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--light-bg);
+    border-radius: var(--border-radius);
+}
+
+.traffic-legend h4 {
+    margin-bottom: 10px;
+}
+
+.legend-item {
+    display: inline-block;
+    margin: 5px 15px 5px 0;
+}
+
+.legend-marker {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+/* ==================== COVID/SRAS ==================== */
+.covid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.covid-card {
+    background: var(--light-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--card-shadow);
+}
+
+.covid-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.covid-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin: 10px 0;
+}
+
+.covid-trend {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+.trend-up {
+    color: var(--danger-color);
+}
+
+.trend-down {
+    color: var(--success-color);
+}
+
+.chart-container {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+
+#covidChart {
+    max-height: 400px;
+}
+
+/* ==================== Qualité de l'air ==================== */
+.air-quality {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.air-quality-badge {
+    padding: 30px;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    box-shadow: var(--card-shadow);
+}
+
+.air-quality-badge .index {
+    font-size: 2.5em;
+}
+
+.air-quality-badge .label {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.air-quality-details {
+    flex: 1;
+    min-width: 300px;
+}
+
+.pollutant {
+    padding: 10px;
+    margin: 8px 0;
+    background: var(--light-bg);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Couleurs qualité de l'air */
+.aqi-good {
+    background: var(--success-color);
+}
+
+.aqi-moderate {
+    background: var(--warning-color);
+}
+
+.aqi-bad {
+    background: var(--danger-color);
+}
+
+.aqi-very-bad {
+    background: #c0392b;
+}
+
+/* ==================== Recommandation finale ==================== */
+.recommendation {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin: 30px 0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.recommendation.negative {
+    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+}
+
+.recommendation h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    border: none;
+    color: white;
+}
+
+.recommendation .icon {
+    font-size: 4em;
+    margin: 20px 0;
+}
+
+.recommendation p {
+    font-size: 1.3em;
+    line-height: 1.6;
+}
+
+/* ==================== Footer et liens ==================== */
+footer {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid var(--light-bg);
+    text-align: center;
+}
+
+.api-links {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: var(--border-radius);
+}
+
+.api-links h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.api-links ul {
+    list-style: none;
+    text-align: left;
+}
+
+.api-links li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.api-links li:last-child {
+    border-bottom: none;
+}
+
+.api-links a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.api-links a:hover {
+    text-decoration: underline;
+}
+
+.git-link {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 12px 30px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.git-link:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== Loading et erreurs ==================== */
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    border: 4px solid var(--light-bg);
+    border-top: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--danger-color);
+    margin: 15px 0;
+}
+
+.info {
+    background: #d1ecf1;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid #0dcaf0;
+    margin: 15px 0;
+}
+
+/* ==================== Media Queries ==================== */
+
+/* Tablettes */
+@media (max-width: 1024px) {
+    .container {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .meteo-summary {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    #map {
+        height: 400px;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    header .subtitle {
+        font-size: 1em;
+    }
+
+    .location-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .section {
+        padding: 15px;
+    }
+
+    .section h2 {
+        font-size: 1.4em;
+    }
+
+    .meteo-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .meteo-period {
+        padding: 15px;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    .covid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .air-quality {
+        flex-direction: column;
+    }
+
+    .air-quality-badge {
+        width: 120px;
+        height: 120px;
+        padding: 20px;
+    }
+
+    .recommendation h2 {
+        font-size: 1.5em;
+    }
+
+    .recommendation .icon {
+        font-size: 3em;
+    }
+
+    .recommendation p {
+        font-size: 1.1em;
+    }
+}
+
+/* Petits smartphones */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.3em;
+    }
+
+    .section h2 {
+        font-size: 1.2em;
+    }
+
+    .meteo-period h3 {
+        font-size: 1.2em;
+    }
+
+    #map {
+        height: 250px;
+    }
+
+    .air-quality-badge {
+        width: 100px;
+        height: 100px;
+    }
+
+    .air-quality-badge .index {
+        font-size: 2em;
+    }
+}
+
+/* Impression */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    #map {
+        height: 400px;
+        break-inside: avoid;
+    }
+
+    .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .git-link {
+        display: none;
+    }
+}
