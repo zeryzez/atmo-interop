@@ -10,23 +10,31 @@
  * - Données COVID/SRAS
  * - Qualité de l'air
  */
+
+// Configuration pour webetu (proxy)
+// ACTIVÉ pour webetu - les serveurs IUT nécessitent un proxy pour accéder à Internet
 $opts = array(
     'http' => array(
         'proxy' => 'tcp://www-cache:3128',
-        'request_fulluri' => true
+        'request_fulluri' => true,
+        'timeout' => 5
+    ),
+    'https' => array(
+        'proxy' => 'tcp://www-cache:3128',
+        'request_fulluri' => true,
+        'timeout' => 5
     ),
     'ssl' => array(
         'verify_peer' => false,
-        'verify_peer_name' => false
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
     )
 );
 $context = stream_context_create($opts);
 stream_context_set_default($opts);
 
-
-// Désactiver les erreurs pour la production
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Augmenter le temps d'exécution maximum
+set_time_limit(30);
 
 // ==================== FONCTIONS UTILITAIRES ====================
 
@@ -42,15 +50,28 @@ function getUrlContent($url, $headers = []) {
         
         $allHeaders = array_merge($defaultHeaders, $headers);
         
+        // Configuration adaptée pour webetu avec proxy
         $opts = [
             'http' => [
                 'method' => 'GET',
                 'header' => implode("\r\n", $allHeaders),
-                'timeout' => 10
+                'timeout' => 5,
+                'ignore_errors' => true,
+                'proxy' => 'tcp://www-cache:3128',
+                'request_fulluri' => true
+            ],
+            'https' => [
+                'method' => 'GET',
+                'header' => implode("\r\n", $allHeaders),
+                'timeout' => 5,
+                'ignore_errors' => true,
+                'proxy' => 'tcp://www-cache:3128',
+                'request_fulluri' => true
             ],
             'ssl' => [
                 'verify_peer' => false,
-                'verify_peer_name' => false
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
             ]
         ];
         
@@ -80,11 +101,6 @@ function getClientIP() {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     } else {
         $ip = $_SERVER['REMOTE_ADDR'];
-    }
-
-    // POUR LES TESTS EN LOCAL : forcer une IP publique
-    if ($ip == '127.0.0.1' || $ip == '::1') {
-        $ip = '2001:660:4503:4242:fc1b:128c:b89c:14d6';
     }
     
     return $ip;
@@ -123,18 +139,33 @@ function geolocateIP($ip) {
             error_log("Erreur géolocalisation: " . $e->getMessage());
         }
     }
-    // Fallback : géocoder l'IUT Charlemagne
-    $iutAddress = "IUT Nancy Charlemagne";
-    $iutCoords = geocodeAddress($iutAddress);
+    
+    // Fallback : retourner les coordonnées de l'IUT directement (sans API)
+    error_log("Utilisation des coordonnées par défaut de l'IUT Charlemagne");
 
-    return [
-            'lat' => $iutCoords['lat'],
-            'lon' => $iutCoords['lon'],
+    $iutAdress = 'IUT Charlemagne';
+    $iutCoord = geocodeAddress($iutAdress);
+    
+    if ($iutCoord['lat'] && $iutCoord['lon']) {
+        return [
+            'lat' => $iutCoord['lat'],
+            'lon' => $iutCoord['lon'],
             'city' => 'Nancy',
             'region' => 'Grand Est',
             'country' => 'France',
             'zip' => '54000',
             'timezone' => 'Europe/Paris'
+        ];
+    }
+    
+    return [
+        'lat' => 48.6880492,
+        'lon' => 6.1727318,
+        'city' => 'Nancy',
+        'region' => 'Grand Est',
+        'country' => 'France',
+        'zip' => '54000',
+        'timezone' => 'Europe/Paris'
     ];
 }
 
@@ -473,17 +504,32 @@ function geocodeAddress($address) {
 
 // ==================== RÉCUPÉRATION DES DONNÉES ====================
 
-$clientIP = getClientIP();
-$geolocation = geolocateIP($clientIP);
-$weatherData = getWeatherData($geolocation['lat'], $geolocation['lon']);
-$weatherXML = createWeatherXML($weatherData);
-$trafficData = getTrafficData($geolocation['lat'], $geolocation['lon']);
-$srasData = getSRASData();
-$airQuality = getAirQuality($geolocation['lat'], $geolocation['lon']);
-
-// DEBUG SRAS - À retirer après test
-if (empty($srasData)) {
-    error_log("SRAS DATA IS EMPTY - Checking logs for details");
+try {
+    $clientIP = getClientIP();
+    $geolocation = geolocateIP($clientIP);
+    
+    // Récupération avec gestion d'erreurs
+    $weatherData = @getWeatherData($geolocation['lat'], $geolocation['lon']);
+    $weatherXML = $weatherData ? createWeatherXML($weatherData) : null;
+    
+    $trafficData = @getTrafficData($geolocation['lat'], $geolocation['lon']);
+    if (!is_array($trafficData)) $trafficData = [];
+    
+    $srasData = @getSRASData();
+    if (!is_array($srasData)) $srasData = [];
+    
+    $airQuality = @getAirQuality($geolocation['lat'], $geolocation['lon']);
+    
+} catch (Exception $e) {
+    error_log("ERREUR CRITIQUE: " . $e->getMessage());
+    // Valeurs par défaut pour continuer
+    $clientIP = '127.0.0.1';
+    $geolocation = ['lat' => 48.688, 'lon' => 6.172, 'city' => 'Nancy', 'region' => 'Grand Est', 'country' => 'France', 'zip' => '54000', 'timezone' => 'Europe/Paris'];
+    $weatherData = null;
+    $weatherXML = null;
+    $trafficData = [];
+    $srasData = [];
+    $airQuality = null;
 }
 
 ?>
